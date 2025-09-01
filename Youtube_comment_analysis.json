@@ -1,0 +1,245 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        -256
+      ],
+      "id": "d74a8d7e-b684-4c15-84d3-32544c9f1126",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "webScrapper",
+        "dataset_id": {
+          "__rl": true,
+          "value": "gd_lk9q0ew71spt1mxywf",
+          "mode": "list",
+          "cachedResultName": "Youtube - Comments"
+        },
+        "urls": "[{\"url\":\"https://youtu.be/ZTiUoKSAHaU?si=MEc0vLpjq6exZnd5\"}]",
+        "requestOptions": {}
+      },
+      "type": "@brightdata/n8n-nodes-brightdata.brightData",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -256
+      ],
+      "id": "0c176772-f039-4131-a225-6c37b1a18818",
+      "name": "Extract structured data from a single URL",
+      "credentials": {
+        "brightdataApi": {
+          "id": "5J1lN7KqhF5MIvOF",
+          "name": "BrightData account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "webScrapper",
+        "operation": "downloadSnapshot",
+        "part": 2,
+        "snapshot_id": "={{ $json.snapshot_id }}",
+        "requestOptions": {}
+      },
+      "type": "@brightdata/n8n-nodes-brightdata.brightData",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -224
+      ],
+      "id": "f5559e92-cf2b-409c-8365-3355241606df",
+      "name": "Download the snapshot content",
+      "retryOnFail": true,
+      "credentials": {
+        "brightdataApi": {
+          "id": "5J1lN7KqhF5MIvOF",
+          "name": "BrightData account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      comments: items.map(item => item.json.comment_text)\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -256
+      ],
+      "id": "992d628f-dd9a-4d0e-beb8-71a0ca194bda",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sendTo": "22701a3068@aitsrajampet.ac.in",
+        "subject": "Your YouTube Enhancements & Audience Interests",
+        "message": "=Hi Creator,  Based on recent YouTube comments, here are insights: \n{{ $json.output }}\n\nBest, Your AI Agent",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        -256
+      ],
+      "id": "77597b65-77f9-491d-8595-901f3d3ace22",
+      "name": "Send a message",
+      "webhookId": "e1d61d3a-77ee-417e-9c6e-62d9ef523385",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rZwbytQxIJ76XPry",
+          "name": "Gmail account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  let raw = item.json.candidates[0].content.parts[0].text;\n  \n  // Clean Markdown code fences if Gemini added them\n  raw = raw.replace(/```json|```/g, '').trim();\n\n  return {\n    json: JSON.parse(raw)\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        144
+      ],
+      "id": "452f2528-f6bd-45a3-b954-93f0ff1cbb2b",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "={{ $json.comments[0] }}\n\"the above are YouTube comments:\\n\\nExtract user interests and suggest enhancements that the content creator can make dont make too many advices be point to one of each that's it. Return output in JSON with keys: interests, enhancements.\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        -272
+      ],
+      "id": "4c44f527-e812-4f62-9fab-50d6caf51ccb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -32
+      ],
+      "id": "505f476c-fd4c-45ca-b2b9-888b5036f9be",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rlsFauO5a0ZsPpQO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract structured data from a single URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract structured data from a single URL": {
+      "main": [
+        [
+          {
+            "node": "Download the snapshot content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download the snapshot content": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "any"
+  },
+  "versionId": "19fdef31-5afb-47e2-af56-f35c983fb618",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b46084f4e0149f2ad07fb7523ed097b6dd0bfdb9026515aa3070fbfff7c70dc2"
+  },
+  "id": "AYDdRjXUsVq5E0Wh",
+  "tags": []
+}
