@@ -38,7 +38,7 @@
         -256,
         -256
       ],
-      "id": "0c176772-f039-4131-a225-6c37b1a18818",
+      "id": "api key",
       "name": "Extract structured data from a single URL",
       "credentials": {
         "brightdataApi": {
@@ -61,12 +61,12 @@
         -80,
         -224
       ],
-      "id": "f5559e92-cf2b-409c-8365-3355241606df",
+      "id": "api key",
       "name": "Download the snapshot content",
       "retryOnFail": true,
       "credentials": {
         "brightdataApi": {
-          "id": "5J1lN7KqhF5MIvOF",
+          "id": "api key",
           "name": "BrightData account"
         }
       }
@@ -81,7 +81,7 @@
         80,
         -256
       ],
-      "id": "992d628f-dd9a-4d0e-beb8-71a0ca194bda",
+      "id": "api key",
       "name": "Code"
     },
     {
@@ -97,7 +97,7 @@
         656,
         -256
       ],
-      "id": "77597b65-77f9-491d-8595-901f3d3ace22",
+      "id": "api key",
       "name": "Send a message",
       "webhookId": "e1d61d3a-77ee-417e-9c6e-62d9ef523385",
       "credentials": {
@@ -117,7 +117,7 @@
         864,
         144
       ],
-      "id": "452f2528-f6bd-45a3-b954-93f0ff1cbb2b",
+      "id": "api key",
       "name": "Code1"
     },
     {
@@ -132,7 +132,7 @@
         272,
         -272
       ],
-      "id": "4c44f527-e812-4f62-9fab-50d6caf51ccb",
+      "id": "api key",
       "name": "AI Agent"
     },
     {
@@ -240,6 +240,6 @@
     "templateCredsSetupCompleted": true,
     "instanceId": "b46084f4e0149f2ad07fb7523ed097b6dd0bfdb9026515aa3070fbfff7c70dc2"
   },
-  "id": "AYDdRjXUsVq5E0Wh",
+  "id": "api key",
   "tags": []
 }
